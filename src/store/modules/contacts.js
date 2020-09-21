@@ -130,9 +130,7 @@ const mutations = {
         state.currentContact = contact;
     },
     emptyState: (state) => {
-        let newstate = JSON.parse(JSON.stringify(state));
-        newstate.contacts = state.contacts;
-        this.replaceState(newstate);
+        state.contacts = JSON.parse(JSON.stringify(state.initialContacts));
     }
 };
 

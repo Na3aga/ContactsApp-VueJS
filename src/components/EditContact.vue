@@ -71,7 +71,7 @@
       <button class="prop-btn" @click="addProp" type="button">
         <div class="new-prop">Add new property</div>
       </button>
-      <button class="prop-btn" @click="undo()" type="button">
+      <button class="prop-btn" @click="undo" type="button">
         <div class="new-prop">UNDO</div>
       </button>
       <button class="sb-btn btn" type="submit" value="Submit">
@@ -207,6 +207,7 @@ export default {
         break;
     }
     this.$store.subscribe((mutation) => {
+      console.log('Tracked a mutation');
       if (mutation.type !== "emptyState") {
         this.done.push(mutation);
       }
