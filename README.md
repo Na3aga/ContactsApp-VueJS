@@ -20,5 +20,14 @@ npm run build
 npm run lint
 ```
 
+## Docker setup
+```
+docker-compose build --no-cache
+```
+
+```
+docker-compose up
+```
+
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
