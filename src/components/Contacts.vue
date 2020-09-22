@@ -35,6 +35,7 @@
 </template>
 
 <script>
+// Imports contact list items
 import ContactSmall from "./ContactSmall.vue";
 
 export default {

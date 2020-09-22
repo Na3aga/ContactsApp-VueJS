@@ -73,7 +73,9 @@
 </template>
 
 <script>
+// import constant for setting store's actions's value (used in Contacts.vue list items)
 import {ACTION_EDIT_CONTACTS , ACTION_ADD_CONTACTS, ACTION_DEFAULT } from '../store/modules/CONTACTS_ACTIONS'
+// import vuex funtions to map getters, actions from vuex store module
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -87,11 +89,11 @@ export default {
   },
    methods: {
     ...mapActions(['setCurrentAction']),
-    setAction(action){
+    setAction(action){ // called by button click with given action
       this.setCurrentAction(action);
     }
    },
-   computed: mapGetters(["currentAction"]),
+   computed: mapGetters(["currentAction"]),  // used to style page by currentAction
 };
 </script>
 
