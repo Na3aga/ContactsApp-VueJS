@@ -212,6 +212,7 @@ export default {
         break;
       default:
         this.contact = JSON.parse(JSON.stringify(this.currentContact));
+        this.previous =  JSON.parse(JSON.stringify(this.currentContact));
         this.cname = this.contact.name;
         this.brief = this.contact.brief;
         this.additional = [...this.contact.additional];
