@@ -6,7 +6,8 @@
 </template>
 
 <script>
-import EditContact from '../components/EditContact'
+// Components
+import EditContact from '../components/EditContact' // Form for editing/creating contacts 
 export default {
   name: "About",
   components: {

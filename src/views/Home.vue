@@ -23,13 +23,14 @@
 </template>
 
 <script>
+// import constant for setting store's actions's value (used in Contacts.vue list items)
 import {ACTION_ADD_CONTACTS} from '../store/modules/CONTACTS_ACTIONS';
-
+// import vuex funtions to map getters, actions from vuex store module
 import { mapGetters, mapActions } from "vuex";
-
-import RightNav from "../components/RightNav.vue";
-import Contacts from "../components/Contacts.vue";
-import AddContact from "../components/AddContact.vue";
+// Components 
+import RightNav from "../components/RightNav.vue"; // Navigation  
+import Contacts from "../components/Contacts.vue"; // The list of contacts 
+import AddContact from "../components/AddContact.vue"; // Form for creating new contacts
 
 export default {
   name: "Home",
@@ -48,6 +49,7 @@ export default {
   },
   computed: mapGetters(["allContacts", "currentAction"]),
   created() {
+    // getting contacts (stored in LocalStorage)
     this.getContacts();
   },
 };

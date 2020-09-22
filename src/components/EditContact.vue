@@ -96,15 +96,16 @@
 </template>
 
 <script>
+// import constant for checking store's currentContact's value 
 import { NEW_CONTACT } from "../store/modules/CONTACTS_ACTIONS";
-
+// import vuex funtions to map getters, actions from vuex store module
 import { mapGetters, mapActions } from "vuex";
-
+// import for creting unique id for new user 
 import { v4 as uuidv4 } from "uuid";
 
 export default {
   name: "EditContact",
-  data() {
+  data() { 
     return {
       contact: {},
       cname: "",
@@ -113,18 +114,22 @@ export default {
       valid: false,
       show: false,
       NEW_CONTACT,
-      done: [],
+      previous: {}, // stores the vrevious contact to undo changes
     };
   },
   methods: {
-    ...mapActions(["updateContact", "addNewContact"]),
-    submitContact(e) {
+    ...mapActions([
+      "updateContact",
+      "addNewContact",
+      "setCurrentContact",
+    ]),
+    submitContact(e) { // validates inputs and performs currentContat changes 
       e.preventDefault();
       if (this.cname !== "") this.valid = true;
       if (this.valid) {
         let newContact;
         switch (this.currentContact) {
-          case this.NEW_CONTACT:
+          case this.NEW_CONTACT: // if contact is new, saves it and makes inputs empty 
             newContact = {
               id: uuidv4(),
               name: this.cname,
@@ -139,13 +144,17 @@ export default {
             this.brief = "";
             this.additional = [];
             break;
-          default:
+          default: // if contact was already in lcoalStorage
             this.contact.name = this.cname;
             this.contact.brief = this.brief;
+            // copy additional into contact 
             this.contact.additional = JSON.parse(
               JSON.stringify(this.additional)
             );
             this.updateContact(this.contact);
+            // save changes to undo if necessary 
+            this.previous = this.currentContact; 
+            this.setCurrentContact(this.contact);
             break;
         }
         this.valid = false;
@@ -154,7 +163,7 @@ export default {
         this.show = true;
       }
     },
-    undoFieldChange(i) {
+    undoFieldChange(i) { // asks confirmation and changes local additional with component's update
       if (confirm("Do you want to undo changes?")) {
         this.additional[i] = JSON.parse(
           JSON.stringify(this.currentContact.additional[i])
@@ -162,38 +171,40 @@ export default {
         this.$forceUpdate();
       }
     },
-    addProp() {
+    addProp() { // add another key value field to contact
       this.additional.push({ fname: "field name", fvalue: "field value" });
     },
-    removeProp(i) {
+    removeProp(i) { // remove key value field after confirmation
       if (confirm("Are you sure you want to delete this field?")) {
         this.additional.splice(i, 1);
       }
     },
-    preventSubmit(e) {
+    preventSubmit(e) { // prevents enter key to submit form 
       var key = e.charCode || e.keyCode || 0;
       if (key == 13) {
         e.preventDefault();
       }
     },
-    undo() {
-      this.done.pop();
-      this.$store.commit("emptyState");
-      this.done.forEach((mutation) => {
-        this.$store.commit(`${mutation.type}`, mutation.payload);
-        this.done.pop();
-      });
+    undo() { // switchs contact information to the previous and updates component
+      if (confirm("Do you want to undo changes?")) {
+        this.contact = JSON.parse(JSON.stringify(this.previous));
+        this.cname = this.contact.name;
+        this.brief = this.contact.brief;
+        this.additional = JSON.parse(JSON.stringify(this.contact.additional));
+        this.updateContact(this.contact);
+        this.$forceUpdate();
+      }
     },
   },
   computed: {
     ...mapGetters(["currentContact"]),
-    currSign() {
+    currSign() { // Sets the sign of the form
       return this.currentContact === this.NEW_CONTACT
         ? "Add new contact"
         : "Edit contact";
     },
   },
-  created() {
+  created() { // loads contact information in the form
     console.log(this.currentContact);
     switch (this.currentContact) {
       case this.NEW_CONTACT:
@@ -206,12 +217,6 @@ export default {
         this.additional = [...this.contact.additional];
         break;
     }
-    this.$store.subscribe((mutation) => {
-      console.log('Tracked a mutation');
-      if (mutation.type !== "emptyState") {
-        this.done.push(mutation);
-      }
-    });
   },
 };
 </script>
@@ -233,7 +238,8 @@ export default {
 }
 
 .create-contact-form {
-  min-width: 25vw;
+  box-sizing: content-box;
+  min-width: min(50%, 90vw);
   max-width: 800px;
   background: #fff;
   box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.2);

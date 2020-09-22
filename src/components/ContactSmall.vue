@@ -30,9 +30,11 @@
 </template>
 
 <script>
+// import constants for setting store's currentContact's value, and to change markup by currentAction 
 import { ACTION_EDIT_CONTACTS, NEW_CONTACT } from "../store/modules/CONTACTS_ACTIONS";
-
+// import router to change page (for editing contacts)
 import router from "../router";
+// import vuex funtions to map getters, actions from vuex store module
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -46,20 +48,21 @@ export default {
   },
   methods: {
     ...mapActions(["delContact", 'setCurrentContact']),
-    deleteContact() {
+    deleteContact() { // called by button click 
+      // if button was clicked ones => change 'confirmed' value to display another icon 
       this.confirmed = !this.confirmed;
       console.log(this.confirmed)
-      if(this.confirmed !== true){
+      if(this.confirmed !== true){ //if button was clicked ones => give 5 seconds to confirm the action
         setTimeout(()=>{ this.confirmed = true }, 5000);
         return;
       }
       console.log("Contact gonna be deleted");
-      if (this.currentContact === this.contact){
+      if (this.currentContact === this.contact){ // if EditContact is editing this contcat => change it to create new
         this.setCurrentContact(NEW_CONTACT);
       }
-      this.delContact(this.contact);
+      this.delContact(this.contact); // finally delete
     },
-    changeContact() {
+    changeContact() { // change store's currentContact value and route to about page (EditContact.vue)
       console.log("Contact gonna be changed");
       this.setCurrentContact(this.contact);
       router.push("about");

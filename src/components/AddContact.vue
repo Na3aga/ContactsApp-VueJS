@@ -19,7 +19,7 @@
         id
         placeholder="Add brief description..."
       />
-      <input type="tel" id="phone" name="phone" placeholder="012-345-6789" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required><br><br>
+      <!-- <input type="tel" id="phone" name="phone" placeholder="012-345-6789" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required><br><br> -->
       
       <button class="sb-btn btn" type="submit" value="Submit">
         <svg class="sb-btn icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -43,7 +43,9 @@
 </template>
 
 <script>
+// import vuex funtion to map actions from vuex store module
 import { mapActions } from "vuex";
+// import for creting unique id for new user 
 import { v4 as uuidv4 } from "uuid";
 
 export default {
@@ -58,7 +60,7 @@ export default {
   },
   methods: {
     ...mapActions(["addNewContact"]),
-    addContact(e) {
+    addContact(e) { // checks input's values and adds contact 
       e.preventDefault();
       if (this.cname !== ""){
         this.valid = true;
@@ -72,8 +74,7 @@ export default {
         isOnline: true,
         additional: [],
       };
-      // Send new constructed contact up to the App (parent)
-      this.addNewContact(newContact);
+      this.addNewContact(newContact); // action to save contact and add it to the state
       this.cname = "";
       this.brief = "";
       this.valid = false;
